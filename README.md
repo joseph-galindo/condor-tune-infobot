@@ -6,7 +6,7 @@ A simple bot for reciting meta-info about Necrodancer racing events.
 ##Setup
 To use condor-tune-infobot with your Discord, visit [Discord's official API documentation](https://discordapp.com/developers/docs/topics/oauth2#bot-vs-user-accounts) for more information on how bots should be created. Once your application and bot account is created, you will need the token of the bot, and the user ID of the bot. Both of these can be accessed on your application's page within the Discord Developer's section, under the 'APP BOT USER' section.
 
-Next, clone this project or [download it as a ZIP](https://github.com/joseph-galindo/condor-tune-infobot/archive/master.zip) and open up `app.js`.
+Next, clone this project or [download it as a ZIP](https://github.com/joseph-galindo/condor-tune-infobot/archive/master.zip) and open up `app_credentials.json`.
 
 With the change from the unofficial Discord API to the official API, this bot now uses just the bot's token and user ID. They are called in early on within the code, from an external json file called `app_credentials.json`. Your json should be configured like so:
 
