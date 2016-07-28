@@ -1,7 +1,7 @@
 {
-  "name": "trump-slackbot",
+  "name": "condor-tune-infobot",
   "version": "1.0.0",
-  "description": "Add Donald Trump to your Slack channels",
+  "description": "Discord bot that gives meta info on Necrodancer racing",
   "contributors": [
     {
       "name": "Ethan Lee",
@@ -11,6 +11,9 @@
     {
       "name": "Kushal Tirumala",
       "email": "superkushal93@gmail.com"
+    },
+    {
+      "name": "Joseph Galindo"
     }
   ],
   "license": "MIT",
@@ -22,6 +25,7 @@
     "start": "node app.js"
   },
   "devDependencies": {
-    "death": "^1.0.0"
+    "death": "^1.0.0",
+    "forever": "^0.15.2"
   }
 }

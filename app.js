@@ -10,6 +10,14 @@ var Discord = require("discord.js");
 var ON_DEATH = require('death');
 var credentials = require('./app_credentials.json');
 
+//load response data
+var response_data = require('./responses.json');
+
+var mentionResponse = response_data.mentionResponse;
+var multipleTermResponse = response_data.multipleTermResponse;
+var invalidTermResponse = response_data.invalidTermResponse;
+var responses = response_data.responses;
+
 var discord_bot = new Discord.Client();
 
 var condor_user_id = credentials.bot_user_id;
@@ -17,102 +25,6 @@ var condor_user_id = credentials.bot_user_id;
 console.log("Logging into Discord...");
 
 discord_bot.loginWithToken(credentials.bot_token).then(dostuff);
-
-var mentionResponse = "for help on how to use me, try `.infobot help`."
-var multipleTermResponse = "More than one command or word was given to the me. Please only use one word, such as `.infobot help` or `.infobot zoom`.";
-var invalidTermResponse = "Sorry, I don't understand that command. For a list of commands I understand, try `.infobot help`.";
-
-var responses = {
-    "zoom": `\`\`\`
-How to change your resolution:
-
-1. Right click Crypt of the NecroDancer in Steam
-2. Click "Properties"
-3. Click "Set Launch Options"
-4. Enter the resolution in this format: "960 540" (without quotes). If you want to play at 1440x810, for example, the box would simply read:
-1440 810
-
-CoNDOR zoom/resolution is as follows:
-1920x1080 resolution at 4x view multipler. OR
-1440x810 resolution at 3x viewmultipler. OR
-960x540 resolution at 2x view multipler.
-
-TUNE zoom/resolution is as follows:
-1280x720 resolution at 2x view multipler.\`\`\``,
-
-    "resolution": `\`\`\`
-How to change your resolution:
-
-1. Right click Crypt of the NecroDancer in Steam
-2. Click "Properties"
-3. Click "Set Launch Options"
-4. Enter the resolution in this format: "960 540" (without quotes). If you want to play at 1440x810, for example, the box would simply read:
-1440 810
-
-CoNDOR zoom/resolution is as follows:
-1920x1080 resolution at 4x view multipler. OR
-1440x810 resolution at 3x viewmultipler. OR
-960x540 resolution at 2x view multipler.
-
-TUNE zoom/resolution is as follows:
-1280x720 resolution at 2x view multipler.\`\`\``,
-
-    "rules": `\`\`\`
-Rules megapost goes here.\`\`\``,
-
-    "conduit": `\`\`\`
-Conduit info goes here.\`\`\``,
-
-    "condor": `\`\`\`
-CoNDOR info goes here.\`\`\``,
-
-    "tune": `\`\`\`
-Tune info goes here.\`\`\``,
-
-    "necrobot": `\`\`\`
-Necrobot info goes here.\`\`\``,
-
-    "signups": `\`\`\`
-To signup for Conduit or CoNDOR, you can use this form: http:/\/\signup.condorleague.tv/. 
-If you need further help with this form, reach out to anyone on CoNDOR Staff by mentioning them through the @CoNDOR Staff role.
-
-To signup for TUNE, reach out to Jackofgames#9720, or post in the #TUNE channel.\`\`\``,
-
-    "events": `\`\`\`
-Info on scheduled events goes here.\`\`\``,
-
-    "next": `\`\`\`
-Info on the next event goes here.\`\`\``,
-
-    "help": `\`\`\`
-Welcome to v0.1 of the condor-tune-infobot.
-
-To use this bot, simply start a message with .infobot, followed by a command.
-
-Currently supported commands are:
-
-.infobot conduit - General info about Conduit
-.infobot condor - General info about CoNDOR
-.infobot tune - General info about TUNE
-
-.infobot signups - Detailed info on how to signup to Conduit, CoNDOR, and TUNE
-.infobot rules - Detailed info on the rules for Conduit, CoNDOR, and TUNE
-.infobot zoom - Zoom rules for Conduit/CoNDOR and TUNE
-.infobot resolution - Zoom rules for Conduit/CoNDOR and TUNE (alias of .infobot zoom)
-
-.infobot necrobot - Information about the racing bot "necrobot" and its server
-
-.infobot events - Information about scheduled and upcoming Necrodancer events
-.infobot next - Information about the next scheduled Necrodancer event
-
-.infobot help - You are reading it!
-
-Contact:
-DM or mention mudjoe2#2845 on Discord, or log an issue on: 
-https:/\/\github.com/joseph-galindo/condor-tune-infobot.
-\`\`\``
-
-};
 
 function dostuff(login_results) {
 
@@ -166,8 +78,15 @@ discord_bot.on("ready", function() {
 //on command-line exit, log the bot out
 
 ON_DEATH(function(signal,err) {
-    console.log('exit');
+    console.log('on_death exit');
     discord_bot.logout(function(res) {
         // console.log(res);
+    });
+});
+
+process.on('exit', function() {
+    console.log('node exit');
+    discord_bot.logout(function(res) {
+        //console.log(res);
     });
 });

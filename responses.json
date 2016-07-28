@@ -1,0 +1,18 @@
+{
+  "responses": {
+    "zoom": "```\nHow to change your resolution:\n\n1. Right click Crypt of the NecroDancer in Steam\n2. Click 'Properties'\n3. Click 'Set Launch Options'\n4. Enter the resolution in this format: '960 540' (without quotes). If you want to play at 1440x810, for example, the box would simply read:\n1440 810\n\nCoNDOR zoom/resolution is as follows:\n1920x1080 resolution at 4x view multipler. OR\n1440x810 resolution at 3x viewmultipler. OR\n960x540 resolution at 2x view multipler.\n\nTUNE zoom/resolution is as follows:\n1280x720 resolution at 2x view multipler.```",
+    "resolution": "```\nHow to change your resolution:\n\n1. Right click Crypt of the NecroDancer in Steam\n2. Click 'Properties'\n3. Click 'Set Launch Options'\n4. Enter the resolution in this format: '960 540' (without quotes). If you want to play at 1440x810, for example, the box would simply read:\n1440 810\n\nCoNDOR zoom/resolution is as follows:\n1920x1080 resolution at 4x view multipler. OR\n1440x810 resolution at 3x viewmultipler. OR\n960x540 resolution at 2x view multipler.\n\nTUNE zoom/resolution is as follows:\n1280x720 resolution at 2x view multipler.```",
+    "rules": "```\nRules megapost goes here.```",
+    "conduit": "```\nConduit info goes here.```",
+    "condor": "```\nCoNDOR info goes here.```",
+    "tune": "```\nTune info goes here.```",
+    "necrobot": "```\nNecrobot info goes here.```",
+    "signups": "```\nTo signup for Conduit or CoNDOR, you can use this form: http://signup.condorleague.tv/. \nIf you need further help with this form, reach out to anyone on CoNDOR Staff by mentioning them through the @CoNDOR Staff role.\n\nTo signup for TUNE, reach out to Jackofgames#9720, or post in the #TUNE channel.```",
+    "events": "```\nInfo on scheduled events goes here.```",
+    "next": "```\nInfo on the next event goes here.```",
+    "help": "```\nWelcome to v0.1 of the condor-tune-infobot.\n\nTo use this bot, simply start a message with .infobot, followed by a command.\n\nCurrently supported commands are:\n\n.infobot conduit - General info about Conduit\n.infobot condor - General info about CoNDOR\n.infobot tune - General info about TUNE\n\n.infobot signups - Detailed info on how to signup to Conduit, CoNDOR, and TUNE\n.infobot rules - Detailed info on the rules for Conduit, CoNDOR, and TUNE\n.infobot zoom - Zoom rules for Conduit/CoNDOR and TUNE\n.infobot resolution - Zoom rules for Conduit/CoNDOR and TUNE (alias of .infobot zoom)\n\n.infobot necrobot - Information about the racing bot 'necrobot' and its server\n\n.infobot events - Information about scheduled and upcoming Necrodancer events\n.infobot next - Information about the next scheduled Necrodancer event\n\n.infobot help - You are reading it!\n\nContact:\nDM or mention mudjoe2#2845 on Discord, or log an issue on: \nhttps://github.com/joseph-galindo/condor-tune-infobot.\n```"
+  },
+  "mentionResponse": "for help on how to use me, try `.infobot help`.",
+  "multipleTermResponse": "More than one command or word was given to the me. Please only use one word, such as `.infobot help` or `.infobot zoom`.",
+  "invalidTermResponse": "Sorry, I don't understand that command. For a list of commands I understand, try `.infobot help`."
+}
