@@ -1,0 +1,6 @@
+node_modules/
+config.js
+*.log
+*.out
+app_credentials.txt
+app_credentials.json
