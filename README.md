@@ -19,9 +19,9 @@ Finally, run `npm install`.
 
 From this point, you can run `npm start` to run the bot.
 
-Currently working on an alternate way of running the bot (for long periods of time) using this:
-`npm install forever -g`
-`forever start app.js`
+Currently working on an alternate way of running the bot (for long periods of time) using this:  
+`npm install forever -g`  
+`forever start app.js`  
 
 ##License
 The MIT License (MIT)
