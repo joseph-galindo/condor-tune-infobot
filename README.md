@@ -23,6 +23,8 @@ Currently working on an alternate way of running the bot (for long periods of ti
 `npm install forever -g`  
 `forever start app.js`  
 
+To add this bot as-is to your own Discord server, use this link: https://discordapp.com/oauth2/authorize?client_id=208046751351963649&scope=bot&permissions=0
+
 ##License
 The MIT License (MIT)
 
