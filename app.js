@@ -6,12 +6,14 @@
 /* Change this to your Slack bot's OAuth token,
 * found in the Integrations tab */
 
+var fs = require("fs");
 var Discord = require("discord.js");
 var ON_DEATH = require('death');
 var credentials = require('./app_credentials.json');
 
 //load response data
-var response_data = require('./responses.json');
+var response_filename = './responses.json';
+var response_data = require(response_filename);
 
 var mentionResponse = response_data.mentionResponse;
 var multipleTermResponse = response_data.multipleTermResponse;
@@ -43,17 +45,108 @@ discord_bot.on("ready", function() {
         var isQuery = msg.indexOf(".infobot ") === 0;
         var isMention = msg.indexOf(mentionString) === 0;
 
+        var condor_staff_role = {};
+
+        for(var i = 0; i < message.server.roles.length; i++) {
+            if(message.server.roles[i].name === 'CoNDOR Staff') {
+                condor_staff_role = message.server.roles[i];
+            }
+        }
+
+        // console.log(condor_staff_role);
+        // console.log(message.author.client.userHasRole);
+
+        var isCondorStaff = message.author.client.userHasRole(message.author, condor_staff_role);
+        // console.log('is staff: ' + isCondorStaff);
+
+        // console.log(isCondorStaff);
+
         // response = getResponse(message.content);
 
         if(isQuery) {
 
             msg = msg.substring(8).trim();
-            console.log(msg);
+            // console.log(msg);
 
-            //if space character exists, they used >= 2 keywords, deny them and instruct them on how to structure queries
+            //if space character exists, they used >= 2 keywords.
+            //This can mean an invalid query, or it can mean a superuser query with more than 2 keywords.
+            //Invalid queries should be given a redirection messages, superuser queries should be executed
             if(msg.indexOf(" ") >= 0) {
-                discord_bot.sendMessage(message.channel, multipleTermResponse, {}, function(error,msg) {
-                });
+
+                var words = msg.split(" ");
+
+                //reassemble the argument that is a string
+                for(var i = 0; i < words.length; i++) {
+
+                    if(words[i].indexOf("\"") === 0 && words[i].charAt(words[i].length-1) !== "\"") {
+
+                        var j = i+1;
+                        var quote_string = words[i];
+
+                        while(j < words.length) {
+
+                            quote_string += " " + words[j];
+
+                            if(words[j].indexOf("\"") === words[j].length-1) {
+                                break;
+                            }
+
+                            j++;
+                        }
+
+                        //remove the partial fragments within the quote string
+                        words.splice(i, j-1);
+                        //add the final quote string back into the array
+                        words.splice(i,0,quote_string);
+                    }
+                }
+
+                // console.log(words);
+
+                if(words[0] === "edit") {
+
+                    //array should look like ['edit', 'command', 'some text here']
+                    if(words.length !== 3) {
+                        discord_bot.sendMessage(message.channel, "Please use the edit command by `.infobot edit \"command\" \"new text\"", {}, function(error,msg) {
+                        });
+                    } else {
+                        var command_to_edit = words[1].replace(new RegExp("\"", 'g'), '');
+                        var text_to_edit = words[2].replace(new RegExp("\"", 'g'), '');
+
+                        text_to_edit = "```" + text_to_edit + "```";
+
+                        console.log(command_to_edit);
+                        console.log(text_to_edit);
+
+                        console.log(response_data);
+
+                        //check if command to be edited exists in the responses.json, and check that the user calling the command has the right permissions
+                        if(response_data['responses'].hasOwnProperty(command_to_edit)) {
+
+                            if(isCondorStaff) {
+
+                                //make the change to our data within app.js
+                                response_data['responses'][command_to_edit] = text_to_edit;
+
+                                //then write that data to the actual json file so it is saved for persistence
+                                fs.writeFile(response_filename, JSON.stringify(response_data, null, 2), function(err) {
+                                    // console.log(err);
+                                });
+                            } else {
+                                discord_bot.sendMessage(message.channel, "Sorry, only users with the CoNDOR Staff role can use this command. Try `.infobot help` to see other commands you can use.", {}, function(error,msg) {
+                                });
+                            }
+
+                        } else {
+                            discord_bot.sendMessage(message.channel, "The command you are trying to edit does not exist.", {}, function(error,msg) {
+                            });
+                        }
+                    }
+                } else {
+                    discord_bot.sendMessage(message.channel, multipleTermResponse, {}, function(error,msg) {
+                    });
+                }
+
             } else {
 
                 if(responses.hasOwnProperty(msg)) {
