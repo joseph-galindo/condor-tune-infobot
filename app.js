@@ -21,6 +21,7 @@ var responses = response_data.responses;
 var discord_bot = new Discord.Client();
 
 var condor_user_id = credentials.bot_user_id;
+var mentionString = "<@" + condor_user_id + ">";
 
 console.log("Logging into Discord...");
 
@@ -38,15 +39,15 @@ discord_bot.on("ready", function() {
 
     discord_bot.on("message", function(message){
 
-        var msg = message.content.trim();
+        var msg = message.content.trim().toLowerCase();
         var isQuery = msg.indexOf(".infobot ") === 0;
-        var isMention = msg.indexOf("<@208049027156017152>") === 0;
+        var isMention = msg.indexOf(mentionString) === 0;
 
         // response = getResponse(message.content);
 
         if(isQuery) {
 
-            msg = msg.substring(8).trim().toLowerCase();
+            msg = msg.substring(8).trim();
             console.log(msg);
 
             //if space character exists, they used >= 2 keywords, deny them and instruct them on how to structure queries
