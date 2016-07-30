@@ -52,8 +52,8 @@ discord_bot.on("ready", function() {
         var isCondorStaff = false;
         //assume by default the message is not from a staff member
 
-        console.log(necrodancer_server_id);
-        console.log(message.server.id);
+        // console.log(necrodancer_server_id);
+        // console.log(message.server.id);
 
         for(var i = 0; i < message.server.roles.length; i++) {
             if(message.server.roles[i].name === 'CoNDOR Staff') {
@@ -63,10 +63,12 @@ discord_bot.on("ready", function() {
 
         //only check for condor staff if the message was sent on the official-unofficial NecroDancer server
         if(message.server.id === necrodancer_server_id) {
+            console.log('checking condor staff role');
             isCondorStaff = message.author.client.userHasRole(message.author, condor_staff_role);
             //this resolves to an @role mention, NOT a boolean
             //currently left as-is to allow functionality, via javascript evaluating this to true
         } else {
+            console.log('not checking condor staff role');
             //do nothing, leave isCondorStaff as false on purpose
         }
 
