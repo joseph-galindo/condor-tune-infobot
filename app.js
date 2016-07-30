@@ -26,7 +26,7 @@ var condor_user_id = credentials.bot_user_id;
 var mentionString = "<@" + condor_user_id + ">";
 
 //hardcoding is bad
-var necrodancer_server_id = 83287148966449152;
+var necrodancer_server_id = '83287148966449152';
 
 console.log("Logging into Discord...");
 
@@ -59,7 +59,10 @@ discord_bot.on("ready", function() {
         }
 
         console.log("Hardcoded ID: " + necrodancer_server_id);
+        console.log('Hardcoded typeof: ' + necrodancer_server_id);
         console.log("Discord.js ID: " + message.server.id);
+        console.log("Discord.js typeof: " + message.server.id);
+
         console.log("comparison: " + message.server.id === necrodancer_server_id);
 
         //only check for condor staff if the message was sent on the official-unofficial NecroDancer server
