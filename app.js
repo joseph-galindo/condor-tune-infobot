@@ -52,14 +52,15 @@ discord_bot.on("ready", function() {
         var isCondorStaff = false;
         //assume by default the message is not from a staff member
 
-        // console.log(necrodancer_server_id);
-        // console.log(message.server.id);
-
         for(var i = 0; i < message.server.roles.length; i++) {
             if(message.server.roles[i].name === 'CoNDOR Staff') {
                 condor_staff_role = message.server.roles[i];
             }
         }
+
+        console.log("Hardcoded ID: " + necrodancer_server_id);
+        console.log("Discord.js ID: " + message.server.id);
+        console.log("comparison: " + message.server.id === necrodancer_server_id);
 
         //only check for condor staff if the message was sent on the official-unofficial NecroDancer server
         if(message.server.id === necrodancer_server_id) {
