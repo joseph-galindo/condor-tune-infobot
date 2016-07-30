@@ -25,6 +25,9 @@ var discord_bot = new Discord.Client();
 var condor_user_id = credentials.bot_user_id;
 var mentionString = "<@" + condor_user_id + ">";
 
+//hardcoding is bad
+var necrodancer_server_id = 83287148966449152;
+
 console.log("Logging into Discord...");
 
 discord_bot.loginWithToken(credentials.bot_token).then(dostuff);
@@ -46,6 +49,11 @@ discord_bot.on("ready", function() {
         var isMention = msg.indexOf(mentionString) === 0;
 
         var condor_staff_role = {};
+        var isCondorStaff = false;
+        //assume by default the message is not from a staff member
+
+        console.log(necrodancer_server_id);
+        console.log(message.server.id);
 
         for(var i = 0; i < message.server.roles.length; i++) {
             if(message.server.roles[i].name === 'CoNDOR Staff') {
@@ -53,15 +61,14 @@ discord_bot.on("ready", function() {
             }
         }
 
-        // console.log(condor_staff_role);
-        // console.log(message.author.client.userHasRole);
-
-        var isCondorStaff = message.author.client.userHasRole(message.author, condor_staff_role);
-        // console.log('is staff: ' + isCondorStaff);
-
-        // console.log(isCondorStaff);
-
-        // response = getResponse(message.content);
+        //only check for condor staff if the message was sent on the official-unofficial NecroDancer server
+        if(message.server.id === necrodancer_server_id) {
+            isCondorStaff = message.author.client.userHasRole(message.author, condor_staff_role);
+            //this resolves to an @role mention, NOT a boolean
+            //currently left as-is to allow functionality, via javascript evaluating this to true
+        } else {
+            //do nothing, leave isCondorStaff as false on purpose
+        }
 
         if(isQuery) {
 
