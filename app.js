@@ -63,7 +63,9 @@ discord_bot.on("ready", function() {
         console.log("Discord.js ID: " + message.server.id);
         console.log("Discord.js typeof: " + typeof message.server.id);
 
-        console.log("comparison: " + message.server.id === necrodancer_server_id);
+        var bool = (message.server.id === necrodancer_server_id);
+
+        console.log("comparison: " + bool);
 
         //only check for condor staff if the message was sent on the official-unofficial NecroDancer server
         if(message.server.id === necrodancer_server_id) {
