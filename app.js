@@ -60,8 +60,8 @@ discord_bot.on("ready", function() {
 
         console.log("Hardcoded ID: " + necrodancer_server_id);
         console.log('Hardcoded typeof: ' + necrodancer_server_id);
-        console.log("Discord.js ID: " + message.server.id);
-        console.log("Discord.js typeof: " + message.server.id);
+        console.log("Discord.js ID: " + typeof message.server.id);
+        console.log("Discord.js typeof: " + typeof message.server.id);
 
         console.log("comparison: " + message.server.id === necrodancer_server_id);
 
