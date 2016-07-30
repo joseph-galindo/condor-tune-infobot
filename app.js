@@ -26,7 +26,7 @@ var condor_user_id = credentials.bot_user_id;
 var mentionString = "<@" + condor_user_id + ">";
 
 //hardcoding is bad
-var necrodancer_server_id = 83287148966449150;
+var necrodancer_server_id = 83287148966449152;
 
 console.log("Logging into Discord...");
 
