@@ -34,6 +34,10 @@ var necrodancer_server_id = '83287148966449152';
 
 //helper functions
 
+function readyHandler() {
+    console.log("Ready, waiting for messages...");
+}
+
 //callback function for discord bot login, if needed to debug connection issues.
 function loginFunction(login_results) {
 
@@ -130,10 +134,10 @@ function editCommand(msg_cleaned_split, message_object) {
 
         text_to_edit = "```" + text_to_edit + "```";
 
-        console.log(command_to_edit);
-        console.log(text_to_edit);
+        // console.log(command_to_edit);
+        // console.log(text_to_edit);
 
-        console.log(response_data);
+        // console.log(response_data);
 
         //check if command to be edited exists in the responses.json, and check that the user calling the command has the right permissions
         if(response_data['responses'].hasOwnProperty(command_to_edit)) {
@@ -163,10 +167,7 @@ function editCommand(msg_cleaned_split, message_object) {
 
 //listeners
 
-discord_bot.on("ready", function() {
-
-    console.log("Ready, waiting for messages...");
-});
+discord_bot.on("ready", readyHandler);
 
 discord_bot.on("message", function(message_object){
 
