@@ -32,64 +32,13 @@ var isCondorStaff = false;
 //hardcoding is bad
 var necrodancer_server_id = '83287148966449152';
 
-console.log("Logging into Discord...");
-
-discord_bot.loginWithToken(credentials.bot_token).then(loginFunction);
-
-discord_bot.on("ready", function() {
-
-    console.log("Ready, waiting for messages...");
-
-    discord_bot.on("message", function(message_object){
-
-        var msg_cleaned = message_object.content.trim().toLowerCase();
-        var isQuery = msg_cleaned.indexOf(".infobot ") === 0;
-        var isMention = msg_cleaned.indexOf(mentionString) === 0;
-
-        checkCondorStaffRole(message_object);
-
-        if(isQuery) {
-
-            msg_cleaned = msg_cleaned.substring(8).trim();
-
-            //if space character exists, they used >= 2 keywords.
-            //This can mean an invalid query, or it can mean a query with more than 2 keywords.
-            //Invalid queries will be redirected, queries will be executed if permissions are met
-            if(msg_cleaned.indexOf(" ") >= 0) {
-
-                parseCommandsFromMessage(msg_cleaned, message_object);
-
-            } else {
-
-                //a simple command (one term besides `.infobot`) was supplied, such as `.infobot condor`
-                //in this case, just check against the resposnes.json and return text accordingly
-                if(responses.hasOwnProperty(msg_cleaned)) {
-                    //one keyword, and valid command!!!
-                    discord_bot.sendMessage(message_object.channel, responses[msg_cleaned], {}, function(error,msg) {
-                    });
-                } else {
-                    //one keyword, but not a valid command
-                    discord_bot.sendMessage(message_object.channel, invalidTermResponse, {}, function(error,msg) {
-                    });
-                }
-            }
-        }
-
-        if(isMention) {
-            discord_bot.reply(message_object,mentionResponse,{}, function(err,msg){
-            });
-        }
-
-    });
-});
-
 //helper functions
 
 //callback function for discord bot login, if needed to debug connection issues.
 function loginFunction(login_results) {
 
     // console.log(login_results);
-    console.log("Done logging in successfully!");
+    console.log("Done attemping login!");
 }
 
 //fires on every message sent
@@ -103,12 +52,12 @@ function checkCondorStaffRole(message_object) {
 
     //only check for condor staff if the message was sent on the official-unofficial NecroDancer server
     if(message_object.server.id === necrodancer_server_id) {
-        console.log('checking condor staff role');
+        // console.log('checking condor staff role');
         isCondorStaff = message_object.author.client.userHasRole(message_object.author, condor_staff_role);
         //this resolves to an @role mention, NOT a boolean
         //currently left as-is to allow functionality, via javascript evaluating this to true
     } else {
-        console.log('not checking condor staff role');
+        // console.log('not checking condor staff role');
         //do nothing, leave isCondorStaff as false on purpose
     }
 };
@@ -198,6 +147,8 @@ function editCommand(msg_cleaned_split, message_object) {
                 fs.writeFile(response_filename, JSON.stringify(response_data, null, 2), function(err) {
                     // console.log(err);
                 });
+
+                isCondorStaff = false;
             } else {
                 discord_bot.sendMessage(message_object.channel, "Sorry, only users with the CoNDOR Staff role can use this command. Try `.infobot help` to see other commands you can use.", {}, function(error,msg) {
                 });
@@ -209,6 +160,55 @@ function editCommand(msg_cleaned_split, message_object) {
         }
     }
 };
+
+//listeners
+
+discord_bot.on("ready", function() {
+
+    console.log("Ready, waiting for messages...");
+});
+
+discord_bot.on("message", function(message_object){
+
+    var msg_cleaned = message_object.content.trim().toLowerCase();
+    var isQuery = msg_cleaned.indexOf(".infobot ") === 0;
+    var isMention = msg_cleaned.indexOf(mentionString) === 0;
+
+    checkCondorStaffRole(message_object);
+
+    if(isQuery) {
+
+        msg_cleaned = msg_cleaned.substring(8).trim();
+
+        //if space character exists, they used >= 2 keywords.
+        //This can mean an invalid query, or it can mean a query with more than 2 keywords.
+        //Invalid queries will be redirected, queries will be executed if permissions are met
+        if(msg_cleaned.indexOf(" ") >= 0) {
+
+            parseCommandsFromMessage(msg_cleaned, message_object);
+
+        } else {
+
+            //a simple command (one term besides `.infobot`) was supplied, such as `.infobot condor`
+            //in this case, just check against the resposnes.json and return text accordingly
+            if(responses.hasOwnProperty(msg_cleaned)) {
+                //one keyword, and valid command!!!
+                discord_bot.sendMessage(message_object.channel, responses[msg_cleaned], {}, function(error,msg) {
+                });
+            } else {
+                //one keyword, but not a valid command
+                discord_bot.sendMessage(message_object.channel, invalidTermResponse, {}, function(error,msg) {
+                });
+            }
+        }
+    }
+
+    if(isMention) {
+        discord_bot.reply(message_object,mentionResponse,{}, function(err,msg){
+        });
+    }
+
+});
 
 //on command-line exit, log the bot out
 
@@ -225,3 +225,7 @@ process.on('exit', function() {
         //console.log(res);
     });
 });
+
+//log the bot in
+
+discord_bot.loginWithToken(credentials.bot_token).then(loginFunction);
