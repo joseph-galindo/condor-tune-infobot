@@ -31,6 +31,7 @@ var isCondorStaff = false;
 
 //hardcoding is bad
 var necrodancer_server_id = '83287148966449152';
+var superuser_id = "72432401770352640";
 
 //log the bot in
 
@@ -61,14 +62,13 @@ function checkCondorStaffRole(message_object) {
         authorToGuild = response;
         authorRoles = authorToGuild.roles;
 
-        //only check for condor staff if the message was sent on the official-unofficial NecroDancer server
-        if(currentGuild.id === necrodancer_server_id) {
+        //only check for condor staff if the message was sent on the official-unofficial NecroDancer server, or is superuser (dev)
+        if(currentGuild.id === necrodancer_server_id || (authorToGuild.id === superuser_id)) {
             // console.log('checking condor staff role');
-            isCondorStaff = authorRoles.exists('name', 'CoNDOR Staff');
+            isCondorStaff = authorRoles.exists('name', 'CoNDOR Staff') || (authorToGuild.id === superuser_id);
             //this resolves to a boolean
         } else {
-            // console.log('not checking condor staff role');
-            //do nothing, leave isCondorStaff as false on purpose
+            isCondorStaff = false;
         }
     })
     .catch(console.log);
@@ -183,45 +183,49 @@ discord_bot.on("ready", readyHandler);
 
 discord_bot.on("message", function(message_object){
 
-    var msg_cleaned = message_object.content.trim().toLowerCase();
-    var isQuery = msg_cleaned.indexOf(".infobot ") === 0;
-    var isMention = msg_cleaned.indexOf(mentionString) === 0;
+    //don't let the bot do anything if it's trying to parse its own messages
+    if(message_object.author.id !== condor_user_id) {
 
-    checkCondorStaffRole(message_object);
+        var msg_cleaned = message_object.content.trim();
+        var isQuery = msg_cleaned.indexOf(".infobot ") === 0;
+        var isMention = msg_cleaned.indexOf(mentionString) === 0;
 
-    if(isQuery) {
+        checkCondorStaffRole(message_object);
 
-        msg_cleaned = msg_cleaned.substring(8).trim();
+        if(isQuery) {
 
-        //if space character exists, they used >= 2 keywords.
-        //This can mean an invalid query, or it can mean a query with more than 2 keywords.
-        //Invalid queries will be redirected, queries will be executed if permissions are met
-        if(msg_cleaned.indexOf(" ") >= 0) {
+            msg_cleaned = msg_cleaned.substring(8).trim();
 
-            parseCommandsFromMessage(msg_cleaned, message_object);
+            //if space character exists, they used >= 2 keywords.
+            //This can mean an invalid query, or it can mean a query with more than 2 keywords.
+            //Invalid queries will be redirected, queries will be executed if permissions are met
+            if(msg_cleaned.indexOf(" ") >= 0) {
 
-        } else {
+                parseCommandsFromMessage(msg_cleaned, message_object);
 
-            //a simple command (one term besides `.infobot`) was supplied, such as `.infobot condor`
-            //in this case, just check against the resposnes.json and return text accordingly
-            if(responses.hasOwnProperty(msg_cleaned)) {
-                //one keyword, and valid command!!!
-                message_object.channel.sendMessage(responses[msg_cleaned])
-                .then(/*message => console.log(`Sent message: ${message.content}`)*/)
-                .catch(console.log);
             } else {
-                //one keyword, but not a valid command
-                message_object.channel.sendMessage(invalidTermResponse)
-                .then(/*message => console.log(`Sent message: ${message.content}`)*/)
-                .catch(console.log);
+
+                //a simple command (one term besides `.infobot`) was supplied, such as `.infobot condor`
+                //in this case, just check against the resposnes.json and return text accordingly
+                if(responses.hasOwnProperty(msg_cleaned)) {
+                    //one keyword, and valid command!!!
+                    message_object.channel.sendMessage(responses[msg_cleaned])
+                    .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+                    .catch(console.log);
+                } else {
+                    //one keyword, but not a valid command
+                    message_object.channel.sendMessage(invalidTermResponse)
+                    .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+                    .catch(console.log);
+                }
             }
         }
-    }
 
-    if(isMention) {
-        message_object.channel.sendMessage(mentionResponse)
-        .then(/*message => console.log(`Sent message: ${message.content}`)*/)
-        .catch(console.log);
+        if(isMention) {
+            message_object.channel.sendMessage(mentionResponse)
+            .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+            .catch(console.log);
+        }
     }
 
 });
