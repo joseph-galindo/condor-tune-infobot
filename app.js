@@ -32,6 +32,11 @@ var isCondorStaff = false;
 //hardcoding is bad
 var necrodancer_server_id = '83287148966449152';
 
+//log the bot in
+
+discord_bot.login(credentials.bot_token)
+.then(loginFunction);
+
 //helper functions
 
 function readyHandler() {
@@ -48,22 +53,25 @@ function loginFunction(login_results) {
 //fires on every message sent
 function checkCondorStaffRole(message_object) {
 
-    for(var i = 0; i < message_object.server.roles.length; i++) {
-        if(message_object.server.roles[i].name === 'CoNDOR Staff') {
-            condor_staff_role = message_object.server.roles[i];
-        }
-    }
+    var currentGuild = message_object.guild;
+    var authorToGuild, authorRoles;
 
-    //only check for condor staff if the message was sent on the official-unofficial NecroDancer server
-    if(message_object.server.id === necrodancer_server_id) {
-        // console.log('checking condor staff role');
-        isCondorStaff = message_object.author.client.userHasRole(message_object.author, condor_staff_role);
-        //this resolves to an @role mention, NOT a boolean
-        //currently left as-is to allow functionality, via javascript evaluating this to true
-    } else {
-        // console.log('not checking condor staff role');
-        //do nothing, leave isCondorStaff as false on purpose
-    }
+    currentGuild.fetchMember(message_object.author)
+    .then(function(response) {
+        authorToGuild = response;
+        authorRoles = authorToGuild.roles;
+
+        //only check for condor staff if the message was sent on the official-unofficial NecroDancer server
+        if(currentGuild.id === necrodancer_server_id) {
+            // console.log('checking condor staff role');
+            isCondorStaff = authorRoles.exists('name', 'CoNDOR Staff');
+            //this resolves to a boolean
+        } else {
+            // console.log('not checking condor staff role');
+            //do nothing, leave isCondorStaff as false on purpose
+        }
+    })
+    .catch(console.log);
 };
 
 //fires on commands that may be complex (more than one command arg that is not `.infobot`). 
@@ -114,8 +122,9 @@ function determineComplexFunction(msg_cleaned_split, message_object) {
         editCommand(msg_cleaned_split, message_object);
 
     } else {
-        discord_bot.sendMessage(message_object.channel, multipleTermResponse, {}, function(error,msg) {
-        });
+        message_object.channel.sendMessage(multipleTermResponse)
+        .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+        .catch(console.log);
     }
 };
 
@@ -126,8 +135,9 @@ function editCommand(msg_cleaned_split, message_object) {
 
     //array should look like ['edit', 'command', 'some text here']
     if(msg_cleaned_split.length !== 3) {
-        discord_bot.sendMessage(message_object.channel, "Please use the edit command by `.infobot edit \"command\" \"new text\"", {}, function(error,msg) {
-        });
+        message_object.channel.sendMessage("Please use the edit command by `.infobot edit \"command\" \"new text\"")
+        .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+        .catch(console.log);
     } else {
         var command_to_edit = msg_cleaned_split[1].replace(new RegExp("\"", 'g'), '');
         var text_to_edit = msg_cleaned_split[2].replace(new RegExp("\"", 'g'), '');
@@ -154,13 +164,15 @@ function editCommand(msg_cleaned_split, message_object) {
 
                 isCondorStaff = false;
             } else {
-                discord_bot.sendMessage(message_object.channel, "Sorry, only users with the CoNDOR Staff role can use this command. Try `.infobot help` to see other commands you can use.", {}, function(error,msg) {
-                });
+                message_object.channel.sendMessage("Sorry, only users with the CoNDOR Staff role can use this command. Try `.infobot help` to see other commands you can use.")
+                .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+                .catch(console.log);
             }
 
         } else {
-            discord_bot.sendMessage(message_object.channel, "The command you are trying to edit does not exist.", {}, function(error,msg) {
-            });
+            message_object.channel.sendMessage("The command you are trying to edit does not exist.")
+            .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+            .catch(console.log);
         }
     }
 };
@@ -194,19 +206,22 @@ discord_bot.on("message", function(message_object){
             //in this case, just check against the resposnes.json and return text accordingly
             if(responses.hasOwnProperty(msg_cleaned)) {
                 //one keyword, and valid command!!!
-                discord_bot.sendMessage(message_object.channel, responses[msg_cleaned], {}, function(error,msg) {
-                });
+                message_object.channel.sendMessage(responses[msg_cleaned])
+                .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+                .catch(console.log);
             } else {
                 //one keyword, but not a valid command
-                discord_bot.sendMessage(message_object.channel, invalidTermResponse, {}, function(error,msg) {
-                });
+                message_object.channel.sendMessage(invalidTermResponse)
+                .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+                .catch(console.log);
             }
         }
     }
 
     if(isMention) {
-        discord_bot.reply(message_object,mentionResponse,{}, function(err,msg){
-        });
+        message_object.channel.sendMessage(mentionResponse)
+        .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+        .catch(console.log);
     }
 
 });
@@ -215,18 +230,14 @@ discord_bot.on("message", function(message_object){
 
 ON_DEATH(function(signal,err) {
     console.log('on_death exit');
-    discord_bot.logout(function(res) {
+    discord_bot.destroy(function(res) {
         // console.log(res);
     });
 });
 
 process.on('exit', function() {
     console.log('node exit');
-    discord_bot.logout(function(res) {
+    discord_bot.destroy(function(res) {
         //console.log(res);
     });
 });
-
-//log the bot in
-
-discord_bot.loginWithToken(credentials.bot_token).then(loginFunction);
