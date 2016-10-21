@@ -18,7 +18,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^9.1.1",
+    "discord.js": "^9.3.0",
+    "memecanvas": "^1.0.5",
     "ws": "*"
   },
   "scripts": {

@@ -35,13 +35,20 @@ var superuser_id = "72432401770352640";
 
 //log the bot in
 
-discord_bot.login(credentials.bot_token)
-.then(loginFunction);
+discordLogin();
 
 //helper functions
 
+function discordLogin() {
+    discord_bot.login(credentials.bot_token).then(loginFunction);
+}
+
 function readyHandler() {
     console.log("Ready, waiting for messages...");
+}
+
+function disconnectHandler() {
+    discordLogin();
 }
 
 //callback function for discord bot login, if needed to debug connection issues.
@@ -181,7 +188,7 @@ function editCommand(msg_cleaned_split, message_object) {
 
 discord_bot.on("ready", readyHandler);
 
-discord_bot.on("message", function(message_object){
+discord_bot.on("message", (message_object) => {
 
     //don't let the bot do anything if it's trying to parse its own messages
     if(message_object.author.id !== condor_user_id) {
@@ -228,6 +235,11 @@ discord_bot.on("message", function(message_object){
         }
     }
 
+});
+
+discord_bot.on('disconnect', () => {
+     console.log('the bot has disconnected, let's restart...');
+     discordLogin();
 });
 
 //on command-line exit, log the bot out
