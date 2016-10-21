@@ -48,6 +48,7 @@ function readyHandler() {
 }
 
 function disconnectHandler() {
+    discord_bot.removeListener('ready', readyHandler);
     discordLogin();
 }
 
