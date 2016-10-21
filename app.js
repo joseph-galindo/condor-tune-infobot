@@ -238,8 +238,8 @@ discord_bot.on("message", (message_object) => {
 });
 
 discord_bot.on('disconnect', () => {
-     console.log('the bot has disconnected, let's restart...');
-     discordLogin();
+     console.log("the bot has disconnected, let's restart...");
+     disconnectHandler();
 });
 
 //on command-line exit, log the bot out
