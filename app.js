@@ -1,17 +1,9 @@
-/*
- *  Made by Ethan Lee (@ethanlee16) and Kushal Tirumala (@kushaltirumala)
- *  Licensed under the MIT License.
- */
-
-/* Change this to your Slack bot's OAuth token,
-* found in the Integrations tab */
-
 var fs = require("fs");
-var Discord = require("discord.js");
-var ON_DEATH = require('death');
+const Discord = require("discord.js");
+// var ON_DEATH = require('death');
 var credentials = require('./app_credentials.json');
 
-var discord_bot = new Discord.Client();
+const discord_bot = new Discord.Client();
 
 //load response data
 var response_filename = './responses.json';
@@ -30,26 +22,18 @@ var condor_staff_role = {};
 var isCondorStaff = false;
 
 //hardcoding is bad
-var necrodancer_server_id = '83287148966449152';
-var superuser_id = "72432401770352640";
-
-//log the bot in
-
-discordLogin();
+const necrodancer_server_id = '83287148966449152';
+const superuser_id = "72432401770352640";
 
 //helper functions
-
-function discordLogin() {
-    discord_bot.login(credentials.bot_token).then(loginFunction);
-}
 
 function readyHandler() {
     console.log("Ready, waiting for messages...");
 }
 
 function disconnectHandler() {
-    discord_bot.removeListener('ready', readyHandler);
-    discordLogin();
+    console.log("the bot has disconnected");
+    // discord_bot.removeListener('ready', readyHandler);
 }
 
 //callback function for discord bot login, if needed to debug connection issues.
@@ -187,9 +171,13 @@ function editCommand(msg_cleaned_split, message_object) {
 
 //listeners
 
-discord_bot.on("ready", readyHandler);
+discord_bot.on("ready", () => {
+    readyHandler();
+});
 
 discord_bot.on("message", (message_object) => {
+
+    console.log('Message received at: ' + message_object.timestamp.toUTCString());
 
     //don't let the bot do anything if it's trying to parse its own messages
     if(message_object.author.id !== condor_user_id) {
@@ -239,22 +227,9 @@ discord_bot.on("message", (message_object) => {
 });
 
 discord_bot.on('disconnect', () => {
-     console.log("the bot has disconnected, let's restart...");
      disconnectHandler();
 });
 
-//on command-line exit, log the bot out
+//log the bot in
 
-ON_DEATH(function(signal,err) {
-    console.log('on_death exit');
-    discord_bot.destroy(function(res) {
-        // console.log(res);
-    });
-});
-
-process.on('exit', function() {
-    console.log('node exit');
-    discord_bot.destroy(function(res) {
-        //console.log(res);
-    });
-});
+discord_bot.login(credentials.bot_token).then(loginFunction);
