@@ -226,6 +226,10 @@ discord_bot.on("message", (message_object) => {
 
 });
 
+discord_bot.on('error', (err) => {
+    console.error(err);
+});
+
 discord_bot.on('disconnect', () => {
      disconnectHandler();
 });
