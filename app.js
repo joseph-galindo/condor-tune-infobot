@@ -1,5 +1,6 @@
 var fs = require("fs");
 const Discord = require("discord.js");
+var memecanvas = require('memecanvas');
 // var ON_DEATH = require('death');
 var credentials = require('./app_credentials.json');
 
@@ -24,6 +25,13 @@ var isCondorStaff = false;
 //hardcoding is bad
 const necrodancer_server_id = '83287148966449152';
 const superuser_id = "72432401770352640";
+
+//because this is server-side js, we should just traverse the folder and get the filenames
+//for the moment, I will hardcode these filenames, but should fix this later.
+var image_filenames = ['cadence_dig.jpg', 'cadence_fall.jpg', 'cadence_idk.jpg', 'cadence_resurrect.jpg', 'cadence_skeleton.jpg', 'cadence_title.jpg', 'necrodancer_dank.jpg'];
+
+//initialize memecanvas for .meme command
+memecanvas.init('./images/meme-images', '-meme');
 
 //helper functions
 
@@ -64,6 +72,30 @@ function checkCondorStaffRole(message_object) {
         }
     })
     .catch(console.log);
+};
+
+function generateMemeImage(message_object) {
+    //pick a random image from the array of images, create a valid filepath from that
+    var chosenImage = image_filenames[Math.floor(Math.random()*image_filenames.length)];
+    var imagePath = './images/base-images/' + chosenImage;
+
+    var topText = 'Top text';
+    var bottomText = 'Bottom text';
+
+    memecanvas.generate(imagePath, topText, bottomText, function(err, memeFilepath) {
+        memeCallback(err, memeFilepath, message_object);
+    });
+};
+
+function memeCallback(err, memeFilepath, message_object) {
+    if(err) {
+        console.log(err);
+    } else {
+        console.log(memeFilepath);
+
+        //post the meme image in the channel of the message
+        message_object.channel.sendFile(memeFilepath, memeFilepath, 'Here is the meme');
+    }
 };
 
 //fires on commands that may be complex (more than one command arg that is not `.infobot`). 
@@ -208,6 +240,11 @@ discord_bot.on("message", (message_object) => {
                     message_object.channel.sendMessage(responses[msg_cleaned])
                     .then(/*message => console.log(`Sent message: ${message.content}`)*/)
                     .catch(console.log);
+
+                } else if(msg_cleaned === 'meme' || msg_cleaned === 'memes') {
+
+                    generateMemeImage(message_object);
+
                 } else {
                     //one keyword, but not a valid command
                     message_object.channel.sendMessage(invalidTermResponse)
