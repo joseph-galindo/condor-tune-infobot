@@ -29,6 +29,18 @@ const superuser_id = "72432401770352640";
 //because this is server-side js, we should just traverse the folder and get the filenames
 //for the moment, I will hardcode these filenames, but should fix this later.
 var image_filenames = ['cadence_dig.jpg', 'cadence_fall.jpg', 'cadence_idk.jpg', 'cadence_resurrect.jpg', 'cadence_skeleton.jpg', 'cadence_title.jpg', 'necrodancer_dank.jpg'];
+var meme_text_pairs = [
+        {'top': 'Some top text',
+        'bottom': 'Some bottom text'},
+
+        {'top': 'Crypt',
+        'bottom': 'of the NecroMemer'},
+
+        {'top': 'Meme me',
+        'bottom': 'up fam'},
+
+        {'top': 'One bat, two bat',
+        'bottom': 'three bat, obsidian rapier'}]
 
 //initialize memecanvas for .meme command
 memecanvas.init('./images/meme-images', '-meme');
@@ -77,10 +89,13 @@ function checkCondorStaffRole(message_object) {
 function generateMemeImage(message_object) {
     //pick a random image from the array of images, create a valid filepath from that
     var chosenImage = image_filenames[Math.floor(Math.random()*image_filenames.length)];
+    //pick a random object that has text for the image
+    var chosenText = meme_text_pairs[Math.floor(Math.random()*meme_text_pairs.length)];
+
     var imagePath = './images/base-images/' + chosenImage;
 
-    var topText = 'Top text';
-    var bottomText = 'Bottom text';
+    var topText = chosenText.top;
+    var bottomText = chosenText.bottom;
 
     memecanvas.generate(imagePath, topText, bottomText, function(err, memeFilepath) {
         memeCallback(err, memeFilepath, message_object);
@@ -101,18 +116,16 @@ function memeCallback(err, memeFilepath, message_object) {
 function deleteMemeImages() {
     const memeDir = './images/meme-images/';
 
-    console.log('abcd');
-
     fs.readdir(memeDir, (err, files) => {
         files.forEach(file => {
 
             if(file.indexOf('.png') >= 0) {
-                 console.log(file);
-                 var real_filepath = memeDir + file; 
-		 
-                 fs.unlink(real_filepath, (err) => {
-                      if(err) throw err;
-                 });
+                console.log(file);
+                var real_filepath = memeDir + file; 
+
+                fs.unlink(real_filepath, (err) => {
+                    if(err) throw err;
+                });
             }
         });
     });
