@@ -94,21 +94,26 @@ function memeCallback(err, memeFilepath, message_object) {
         console.log(memeFilepath);
 
         //post the meme image in the channel of the message
-        message_object.channel.sendFile(memeFilepath, memeFilepath, 'Here is the meme')
-        .then(deleteMemeImages())
-        .catch(console.log);
+        message_object.channel.sendFile(memeFilepath, memeFilepath, 'Here is the meme').then(deleteMemeImages());
     }
 };
 
 function deleteMemeImages() {
-    const memeDir = './images/meme-images';
+    const memeDir = './images/meme-images/';
+
+    console.log('abcd');
 
     fs.readdir(memeDir, (err, files) => {
         files.forEach(file => {
-            console.log(file);
-            fs.unlink(file, (err) => {
-                if(err) throw err;
-            });
+
+            if(file.indexOf('.png') >= 0) {
+                 console.log(file);
+                 var real_filepath = memeDir + file; 
+		 
+                 fs.unlink(real_filepath, (err) => {
+                      if(err) throw err;
+                 });
+            }
         });
     });
 };
@@ -118,6 +123,7 @@ function deleteMemeImages() {
 function parseCommandsFromMessage(msg_cleaned, message_object) {
 
     var words = msg_cleaned.split(" ");
+
 
     //reassemble the argument that is a string
     for(var i = 0; i < words.length; i++) {
