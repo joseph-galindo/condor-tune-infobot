@@ -94,8 +94,23 @@ function memeCallback(err, memeFilepath, message_object) {
         console.log(memeFilepath);
 
         //post the meme image in the channel of the message
-        message_object.channel.sendFile(memeFilepath, memeFilepath, 'Here is the meme');
+        message_object.channel.sendFile(memeFilepath, memeFilepath, 'Here is the meme')
+        .then(deleteMemeImages())
+        .catch(console.log);
     }
+};
+
+function deleteMemeImages() {
+    const memeDir = './images/meme-images';
+
+    fs.readdir(memeDir, (err, files) => {
+        files.forEach(file => {
+            console.log(file);
+            fs.unlink(file, (err) => {
+                if(err) throw err;
+            });
+        });
+    });
 };
 
 //fires on commands that may be complex (more than one command arg that is not `.infobot`). 
