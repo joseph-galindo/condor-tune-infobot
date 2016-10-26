@@ -298,7 +298,10 @@ discord_bot.on("message", (message_object) => {
 });
 
 discord_bot.on('error', (err) => {
-    console.error(err);
+    console.log('An error was encountered.');
+    console.log(err);
+    console.log(err.name);
+    console.log(err.message);
 });
 
 discord_bot.on('disconnect', () => {
