@@ -243,7 +243,7 @@ discord_bot.on("ready", () => {
 
 discord_bot.on("message", (message_object) => {
 
-    console.log('Message received at: ' + message_object.timestamp.toUTCString());
+    console.log('Message received at: ' + message_object.createdTimestamp);
 
     //don't let the bot do anything if it's trying to parse its own messages
     if(message_object.author.id !== condor_user_id) {
