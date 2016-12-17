@@ -273,7 +273,7 @@ discord_bot.on("message", (message_object) => {
                 if(responses.hasOwnProperty(msg_cleaned)) {
                     //one keyword, and valid command!!!
                     message_object.channel.sendMessage(responses[msg_cleaned])
-                    .then(
+                    .then(function(newMsg) {
                         if(msg_cleaned === 'next') {
                             var currentDate = Date.now();
                             var nextDate = new Date(responses['nextDate']).getTime();
@@ -289,7 +289,7 @@ discord_bot.on("message", (message_object) => {
                             .then()
                             .catch(console.log);
                         }
-                    )
+                    })
                     .catch(console.log);
 
                 } else if(msg_cleaned === 'meme' || msg_cleaned === 'memes') {
