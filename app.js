@@ -269,10 +269,27 @@ discord_bot.on("message", (message_object) => {
 
                 //a simple command (one term besides `.infobot`) was supplied, such as `.infobot condor`
                 //in this case, just check against the resposnes.json and return text accordingly
+
                 if(responses.hasOwnProperty(msg_cleaned)) {
                     //one keyword, and valid command!!!
                     message_object.channel.sendMessage(responses[msg_cleaned])
-                    .then(/*message => console.log(`Sent message: ${message.content}`)*/)
+                    .then(
+                        if(msg_cleaned === 'next') {
+                            var currentDate = Date.now();
+                            var nextDate = new Date(responses['nextDate']).getTime();
+                            var difference = nextDate - currentDate;
+
+                            var hours = new Date(difference).getHours();
+                            var minutes = new Date(difference).getMinutes();
+                            var seconds = new Date(difference).getSeconds();
+
+                            var dateMsg = `The next event is ${hours} hours, ${minutes} minutes, ${seconds} seconds away.`;
+
+                            message_object.channel.sendMessage(dateMsg)
+                            .then()
+                            .catch(console.log);
+                        }
+                    )
                     .catch(console.log);
 
                 } else if(msg_cleaned === 'meme' || msg_cleaned === 'memes') {
