@@ -275,15 +275,27 @@ discord_bot.on("message", (message_object) => {
                     message_object.channel.sendMessage(responses[msg_cleaned])
                     .then(function(newMsg) {
                         if(msg_cleaned === 'next') {
+
                             var currentDate = Date.now();
                             var nextDate = new Date(responses['nextDate']).getTime();
-                            var difference = nextDate - currentDate;
+                            var differenceInSeconds = (nextDate - currentDate)/1000;
 
-                            var hours = new Date(difference).getHours();
-                            var minutes = new Date(difference).getMinutes();
-                            var seconds = new Date(difference).getSeconds();
+	 		    console.log(differenceInSeconds);
 
-                            var dateMsg = `The next event is ${hours} hours, ${minutes} minutes, ${seconds} seconds away.`;
+                            if(differenceInSeconds > 0) {
+
+                               var days = Math.floor(differenceInSeconds / (60*60*24));
+                               var hours = Math.floor((differenceInSeconds / (60*60*24) % 1) * 24);
+                               var minutes = Math.floor((((differenceInSeconds / (60*60*24) % 1) * 24) % 1) * 60);
+			       var seconds = Math.floor((((((differenceInSeconds / (60*60*24) % 1) * 24) % 1) * 60) % 1) * 60);
+                            } else {
+                               var days = Math.ceil(differenceInSeconds / (60*60*24));
+                               var hours = Math.ceil((differenceInSeconds / (60*60*24) % 1) * 24);
+                               var minutes = Math.ceil((((differenceInSeconds / (60*60*24) % 1) * 24) % 1) * 60);
+                               var seconds = Math.ceil((((((differenceInSeconds / (60*60*24) % 1) * 24) % 1) * 60) % 1) * 60);
+			    }
+				
+                            var dateMsg = `\`\`\`The next event is ${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds away.\`\`\``;
 
                             message_object.channel.sendMessage(dateMsg)
                             .then()
