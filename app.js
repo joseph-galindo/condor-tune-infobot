@@ -28,7 +28,7 @@ const superuser_id = "72432401770352640";
 
 //because this is server-side js, we should just traverse the folder and get the filenames
 //for the moment, I will hardcode these filenames, but should fix this later.
-var image_filenames = ['cadence_dig.jpg', 'cadence_fall.jpg', 'cadence_idk.jpg', 'cadence_resurrect.jpg', 'cadence_skeleton.jpg', 'cadence_title.jpg', 'necrodancer_dank.jpg'];
+var image_filenames = ['cadence_dig.jpg', 'cadence_fall.jpg', 'cadence_idk.jpg', 'cadence_resurrect.png', 'cadence_skeleton.jpg', 'cadence_title.jpg', 'necrodancer_dank.jpg'];
 var meme_text_pairs = [
         {'top': 'Some top text',
         'bottom': 'Some bottom text'},
