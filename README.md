@@ -13,7 +13,10 @@ With the change from the unofficial Discord API to the official API, this bot no
 ```{
 	"bot_token": "your_bot's_token_goes_here",
 	"bot_user_id": "your_bot's_user_id_goes_here"
-}```
+}
+```
+
+Due to one of the npm package's (`canvas`) pre-dependencies, you need to install Cairo, which is documented on the package's [npm page](https://www.npmjs.com/package/canvas).
 
 Finally, run `npm install`.
 
@@ -28,7 +31,7 @@ To add this bot as-is to your own Discord server, use this link: https://discord
 ##License
 The MIT License (MIT)
 
-Copyright (c) 2015, Ethan Lee and Kushal Tirumala
+Copyright (c) 2016-2017, Joseph Galindo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
