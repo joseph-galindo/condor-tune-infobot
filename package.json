@@ -18,7 +18,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^10.0.1",
+    "discord.js": "^11.0.0",
     "memecanvas": "^1.0.5",
     "node-opus": "^0.2.2",
     "opusscript": "0.0.1",
